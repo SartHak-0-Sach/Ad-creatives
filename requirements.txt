@@ -4,3 +4,5 @@ opencv-python
 tensorflow
 scikit-learn
 gunicorn
+flask
+django
