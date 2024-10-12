@@ -1,0 +1,88 @@
+
+This Python code imports various libraries such as os, cv2 (OpenCV), numpy, pandas, ImageDataGenerator and pre-trained models like ResNet50 from TensorFlow's Keras module. It also imports specific layers and utilities from TensorFlow (Model, Dense, GlobalAveragePooling2D, concatenate) for building neural network models.
+
+The purpose of this code seems to be for building a neural network model, likely for image classification or related tasks
+
+his function load_images_from_dir takes a directory path as input, reads all images (with .jpg or .png extensions) from that directory, resizes them to a fixed size (e.g., 224x224), normalizes their pixel values to the range [0, 1], and stores them along with their respective directory name as labels. It then returns the images and labels as NumPy arrays.
+
+These are just variable assignments. The ad_creatives_dir variable is assigned the string "ad-creatives" and the non_ad_creatives_dir variable is assigned the string "non-ad-creatives". These variables likely represent directory paths where ad creatives and non-ad creatives are stored, respectively.
+
+These lines of code call the load_images_from_dir function twice, once for the ad_creatives_dir directory and once for the non_ad_creatives_dir directory. It loads images from both directories and assigns the loaded images and their corresponding labels to variables ad_images, ad_labels, non_ad_images, and non_ad_labels, respectively. This suggests that ad_images contains images of ad creatives along with their labels, and non_ad_images contains images of non-ad creatives along with their labels.
+
+These lines of code concatenate the arrays ad_images and non_ad_images along the rows (axis=0) and assign the result to the variable all_images. Similarly, it concatenates the arrays ad_labels and non_ad_labels along the rows (axis=0) and assigns the result to the variable all_labels. This effectively combines the images and their corresponding labels from both ad and non-ad creatives into two new arrays, all_images and all_labels, respectively.
+
+These lines of code generate an array of indices representing the number of images in all_images. Then, it shuffles these indices randomly. After shuffling, it rearranges both all_images and all_labels arrays based on the shuffled indices. This randomizes the order of images and their corresponding labels, which is commonly done before splitting data into training and testing sets to prevent any bias that might arise from the original order of the data.
+
+The shape of all_images is (4159, 224, 224, 3), indicating that it contains 4159 images, each with dimensions 224x224 pixels, and with 3 color channels (RGB).
+
+The shape of all_labels is (4159,), indicating that it contains 4159 labels corresponding to the images in all_images.
+
+This code defines an ImageDataGenerator object named datagen, which is used for data augmentation, a technique commonly employed to artificially increase the diversity of training data.
+
+rotation_range: Randomly rotates images by up to 20 degrees.
+width_shift_range: Randomly shifts images horizontally by up to 10% of the total width.
+height_shift_range: Randomly shifts images vertically by up to 10% of the total height.
+shear_range: Randomly applies shear transformations.
+zoom_range: Randomly zooms into images.
+horizontal_flip: Randomly flips images horizontally.
+fill_mode: Specifies how to fill in newly created pixels, with 'nearest' indicating the nearest pixel value.
+
+This function augment_images takes a list of images as input and returns a new list of augmented images. It iterates over each image, expands its dimensions to add a batch dimension, applies data augmentation using the datagen object defined earlier, and appends the augmented image to the list. Finally, it converts the list of augmented images into a NumPy array and returns it.
+
+ResNet50 from tensorflow.keras.applications: This is a pre-trained convolutional neural network (CNN) model called ResNet-50, which is commonly used for image classification tasks.
+
+Model from tensorflow.keras.models: This is a class that allows you to create a neural network model by specifying the input and output layers.
+
+Dense, GlobalAveragePooling2D, and concatenate from tensorflow.keras.layers: These are layer classes used for building neural network architectures. Dense represents a fully connected layer, GlobalAveragePooling2D computes the global average pooling operation for spatial data, and concatenate concatenates tensors along a specified axis.
+
+weights='imagenet' specifies that the model should be initialized with pre-trained weights from the ImageNet dataset.
+
+include_top=False indicates that the fully connected layers (top layers) of the ResNet-50 model, responsible for classification, should not be included. This allows us to add our own classification layers on top of the ResNet-50 backbone.
+
+input_shape=(224, 224, 3) specifies the shape of the input images expected by the model. In this case, images of size 224x224 pixels with 3 color channels (RGB) are expected.
+
+x = base_model.output: This sets the variable x to the output tensor of the ResNet-50 base model.
+
+x = GlobalAveragePooling2D()(x): This applies global average pooling to the x tensor, reducing its spatial dimensions to a vector of fixed size, effectively aggregating spatial information from the entire feature map.
+
+x = Dense(128, activation='relu')(x): This adds a dense layer with 128 units and ReLU activation function on top of the global average pooling layer. This layer serves for additional feature extraction, potentially capturing higher-level patterns in the data.
+
+predictions = Dense(1, activation='sigmoid')(x): This adds a dense layer with a single unit and sigmoid activation function. It produces the final output of the model, which represents the probability of the input belonging to the positive class (e.g., an ad creative).
+
+model = Model(inputs=base_model.input, outputs=predictions): This creates a new model named model with base_model.input as its input and predictions as its output.
+By doing this, you're essentially defining a new model architecture that consists of the ResNet-50 base model followed by the layers defined in the predictions variable. This new model can be used for training, evaluation, and prediction.
+
+initial_learning_rate = 0.001, decay_steps = 1000, decay_rate = 0.9: These variables define the parameters for exponential decay learning rate scheduling. The learning rate starts at initial_learning_rate and decays by decay_rate every decay_steps.
+
+learning_rate_schedule = ExponentialDecay(initial_learning_rate, decay_steps, decay_rate, staircase=True): This creates an exponential learning rate decay schedule with the specified parameters.
+
+optimizer = Adam(learning_rate=learning_rate_schedule): This initializes an Adam optimizer with the learning rate schedule.
+
+model.compile(optimizer=optimizer, loss='sparse_categorical_crossentropy', metrics=['accuracy']): This compiles the model, specifying the optimizer, loss function (sparse_categorical_crossentropy), and evaluation metric (accuracy).
+
+model.summary(): This prints a summary of the model architecture, including the layers, output shapes, and the number of trainable parameters.
+
+sample_indices = np.random.choice(X_test.shape[0], size=5, replace=False): This generates an array of 5 random indices chosen from the range of indices of the test dataset without replacement.
+
+sample_images = X_test[sample_indices]: This selects the images corresponding to the randomly chosen indices from the test dataset and assigns them to the variable sample_images.
+
+sample_labels = y_test[sample_indices]: This selects the labels corresponding to the randomly chosen indices from the test dataset and assigns them to the variable sample_labels.
+
+This function display_sample_images is defined to display a sample of images along with their predicted and true labels:
+
+images: A list or array containing the sample images.
+
+labels: A list or array containing the true labels corresponding to the sample images.
+
+predictions: A list or array containing the predicted labels corresponding to the sample images.
+
+It iterates through each image in the sample and displays it along with its predicted and true labels using matplotlib's imshow function.
+
+num_samples = 5: This variable specifies the number of images to display in the sample.
+
+created an iterative loop
+Inside the loop, it randomly selects a sample of images from the test dataset, predicts their labels using the trained model, and displays the images along with their predicted and true labels using the display_sample_images function.
+
+After displaying the sample, it prompts the user whether they want to continue checking more samples or not.
+
+If the user inputs anything other than 'yes', the loop breaks, ending the checking process.
