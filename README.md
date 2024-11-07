@@ -1,4 +1,4 @@
-# # Ad-Creatives: An Image Classification Model for Advertisements classification🤖
+# Ad-Creatives: An Image Classification Model for Advertisements classification🤖
 
 ## Welcome! 👋
 
