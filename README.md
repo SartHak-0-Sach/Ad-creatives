@@ -35,6 +35,7 @@ The goal of this project is to build a machine learning model that can automatic
 - **Notebook Implementation:** Jupyter notebook (`ad-creatives.ipynb`) for easy understanding and modification.
 
 ### File Structure
+```
 /root-directory
 |-- .github/workflows/           # GitHub workflows for CI/CD
 |-- .gitignore                   # Files to be ignored by Git
@@ -43,6 +44,7 @@ The goal of this project is to build a machine learning model that can automatic
 |-- ad-creatives.ipynb            # Jupyter Notebook with model training and testing
 |-- info.txt                     # Project information and code description
 |-- requirements.txt             # Python dependencies required for the project
+```
 
 ### Technologies Used
 - **Python**
